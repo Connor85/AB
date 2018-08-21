@@ -1,11 +1,6 @@
-#show-cities-visited {
+#show-contact {
   display: none;
 }
-
-/*.new-landmark, .new-timeYear, .new-notes {
-  display: none;
-}*/
-
 
 .contact {
   cursor: pointer;

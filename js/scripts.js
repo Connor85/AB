@@ -1,43 +1,80 @@
-//backend business logic
-//construtor fx
+//back end
 
-function Places(location, landmark, timeYear, notes) {
-  this.location = location;
-  this.landmark = landmark;
-  this.timeYear = timeYear;
-  this.notes = notes;
+function Contact(first, last) {
+  this.firstName = first;
+  this.lastName = last;
+  this.addresses = [];
 }
-Places.prototype.visitedCities = function() {
-  return this.location;
-} 
 
-// user interface logic
+
+Contact.prototype.fullName = function() {
+  return this.firstName + " " + this.lastName;
+}
+
+
+function Address(street, city, state) {
+  this.street = street;
+  this.city = city;
+  this.state = state;
+}
+
+
+
+
+
+//front end
 $(document).ready(function() {
-  $("form#new-place").submit(function(event) {
+
+  $("#add-address").click(function() {
+    $("#new-addresses").append('<div class="new-address">' +
+                                 '<div class="form-group">' +
+                                   '<label for="new-street">Street</label>' +
+                                   '<input type="text" class="form-control new-street">' +
+                                 '</div>' +
+                                 '<div class="form-group">' +
+                                   '<label for="new-city">City</label>' +
+                                   '<input type="text" class="form-control new-city">' +
+                                 '</div>' +
+                                 '<div class="form-group">' +
+                                   '<label for="new-state">State</label>' +
+                                   '<input type="text" class="form-control new-state">' +
+                                 '</div>' +
+                               '</div>');
+  });
+
+  $("form#new-contact").submit(function(event) {
     event.preventDefault();
-    //Places:
-    var inputtedLocation = $("input#new-location").val();
-    var inputtedLandmark = $("input#new-landmark").val();
-    var inputtedtimeYear = $("input#new-timeYear").val();
-    var inputtedNotes = $("input#new-notes").val();
 
-    var newPlaces = new Places(inputtedLocation, inputtedLandmark, inputtedtimeYear, inputtedNotes);
+    var inputtedFirstName = $("input#new-first-name").val();
+    var inputtedLastName = $("input#new-last-name").val();
+    var newContact = new Contact(inputtedFirstName, inputtedLastName);
 
-    $("ul#cities").append("<li><span class='city'>" + newPlaces.visitedCities() + "</span></li>");
-
-    $("input#new-location").val("");
-    $("input#new-landmark").val("");
-    $("input#new-timeYear").val("");
-    $("input#new-notes").val("");
-
-    $(".city").last().click(function() {
-    $("#show-cities-visited").show();
-    $("#show-cities-visited h2").text(newPlaces.location);
-    $(".new-location").text(newPlaces.location);
-    $(".new-landmark").text(newPlaces.landmark);
-    $(".new-timeYear").text(newPlaces.timeYear);
-    $(".new-notes").text(newPlaces.notes);
-
+    $(".new-address").each(function() {
+      var inputtedStreet = $(this).find("input.new-street").val();
+      var inputtedCity = $(this).find("input.new-city").val();
+      var inputtedState = $(this).find("input.new-state").val();
+      var newAddress = new Address(inputtedStreet, inputtedCity, inputtedState)
+      newContact.addresses.push(newAddress)
     });
+
+    $("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
+
+    $(".contact").last().click(function() {
+      $("#show-contact").show();
+      $("#show-contact h2").text(newContact.fullName());
+      $(".first-name").text(newContact.firstName);
+      $(".last-name").text(newContact.lastName);
+      $("ul#addresses").text("");
+      newContact.addresses.forEach(function(address) {
+        $("ul#addresses").append("<li>" + address.street + ", " + address.city + " " + address.state + "</li>");
+      });
+    });
+
+    $("input#new-first-name").val("");
+    $("input#new-last-name").val("");
+    $("input.new-street").val("");
+    $("input.new-city").val("");
+    $("input.new-state").val("");
+
   });
 });
